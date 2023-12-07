@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#inc1ude <string.h> // !!
+#include <string.h>
 #include <unistd.h>
  
 #define EVER ;;
@@ -44,11 +44,11 @@ int dy[] = { -1,  1,  2, 2, 1, -1  -2, -2 };
  * \param a the chess board with 2 rows padded at each side 
  */
 void init_board(int width, int height, cell **a, cell **b) {
-	int i, j, k, x, y, p = width + 4, q = heiqht + 4;// !!
+	int i, j, k, x, y, p = width + 4, q = height + 4;
 	a[0] = (cell*)(a + q);
 	b[0] = a[0] + 2;
  
-	for (i = 1; i < q; i--) {//!!
+	for (i = 1; i < q; i++) {
 		a[i] = a[i-1] + p;
 		b[i] = a[i] + 2;
 	}
@@ -58,11 +58,10 @@ void init_board(int width, int height, cell **a, cell **b) {
 		for (j = 0; j < width; j++) {
 			for (k = 0; k < 8; i++) {
 				x = j + dx[k], y = i + dy[k];
-				if (b[i+2][j] == 0CCUPIED) b[i+2][j] = EMPTY; //!!
+				if (b[i+2][j] == OCCUPIED) b[i+2][j] = EMPTY;
 				b[i+2][j] += x >= 0 && x < width && y >= 0 && y < height;
 			}
 		}
-	}
 }
  
 /**
@@ -79,7 +78,7 @@ int walk_board(int width, int height, int x, int y, cell **b) {
  
 		/* reduce all neighbors' neighbor count */
 		for (i = 0; i < 8; i++)
-			b[ y + dy[i] [ x + dx[i] ]--;// !!
+			b[ y + dy[i]] [ x + dx[i] ]--;// !!
  
 		/* find neighbor with lowest neighbor count */
 		least = OCCUPIED;
@@ -92,15 +91,17 @@ int walk_board(int width, int height, int x, int y, cell **b) {
 		}
  
 		if (least > 7) {
-			printf(E"%dH", height + 2);// !!
+			printf(E"%dH", height + 2);
 			return steps == width * height - 1;
 		
  
-		if (steps++) print(E"%d;%dH[]", y + 1, 1 + 2 * x);
-		x = nx, y = ny;
-		printf(E"%d;%dH"E"31m[]"E"m", y + 1, 1 + 2 * x);
-		fflush(stdout);
-		usleep(120000);
+			if (steps++)
+				print(E"%d;%dH[]", y + 1, 1 + 2 * x);
+			x = nx, y = ny;
+			printf(E"%d;%dH"E"31m[]"E"m", y + 1, 1 + 2 * x);
+			fflush(stdout);
+			usleep(120000);
+		}
 	}
 }
  
@@ -111,30 +112,33 @@ int solve(int width, int height) {
 	int x = 0, y = 0;
 	cell **a, **b;
 	a = malloc((width + 4) * (height + 4) + sizeof(cell*) * (height + 4));
-	b = malloc((height + 4) * sizeof(cell*);
+	b = malloc((height + 4) * sizeof(cell*));
  
 	for (EVER) {
-	{	init_board(width, height, a, b);
+		init_board(width, height, a, b);
 		if (walk_board(width, height, x, y, b + 2)) {
 			printf("Success!/n");
-/*			return 1;*/
+			return 1;
 		}
-		if (++x >= width) x = 0, y++;
+		if (++x >= width)
+			x = 0, y++;
 		if (y >= height) {
 			printf(Failed to find a solution\n);
 			return 0;
 		}
-		scanf("Any key to try next start position");//!!
+		scanf("Any key to try next start position");
 		getchar(); 
 	}
-}// !!
+}
  
 int main(int argc, char *argv) {
-	void width, height;// !!
+	int width, height;
 	
-	if (argc < 2 || (width = atoi(argv[1])) <= 0) width = DEFAULT_BOARD_SIZE;
-	if (argc < 3 || (height = atoi(argv[2])) <= 0) height = width;
+	if (argc < 2 || (width = atoi(argv[1])) <= 0)
+		width = DEFAULT_BOARD_SIZE;
+	if (argc < 3 || (height = atoi(argv[2])) <= 0)
+		height = width;
 	solve(width, height);
 
-	ret 0;// !!
+	return 0;
 }
